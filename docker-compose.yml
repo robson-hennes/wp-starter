@@ -1,0 +1,34 @@
+version: '3.9'
+
+services: 
+    nginx:
+        image: nginx:stable-alpine
+        ports: 
+            - 8080:80
+        volumes: 
+            - ./src:/var/www/html:delegated
+    wordpress:
+        image: wordpress
+        restart: always
+        ports: 
+            - 6666:80
+        environment: 
+            WORDPRESS_DB_HOST: mysql
+            WORDPRESS_DB_USER: wp
+            WORDPRESS_DB_PASSWORD: secret
+            WORDPRESS_DB_NAME: wp
+        volumes: 
+            - ./src:/var/www/html:delegated
+            - ./nginx/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+    mysql:
+        image: mysql:latest
+        environment: 
+            MYSQL_DATABASE: wp
+            MYSQL_USER: wp
+            MYSQL_PASSWORD: secret
+            MYSQL_ROOT_PASSWORD: secret
+
+    php:
+        image: php:7.4-fpm-alpine
+        volumes: 
+            - ./src:/var/www/html:delegated
