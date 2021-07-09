@@ -11,7 +11,7 @@ services:
         image: wordpress
         restart: always
         ports: 
-            - 6666:80
+            - 8082:80
         environment: 
             WORDPRESS_DB_HOST: mysql
             WORDPRESS_DB_USER: wp
