@@ -4,15 +4,16 @@ services:
     nginx:
         image: nginx:stable-alpine
         ports: 
-            - 8080:80
+            - 80:80
         volumes: 
             - ./src:/var/www/html:delegated
     wordpress:
-        image: wordpress
+        image: wordpress:latest
         restart: always
         ports: 
-            - 8082:80
+            - 8085:80
         environment: 
+            TZ: America/Sao_Paulo
             WORDPRESS_DB_HOST: mysql
             WORDPRESS_DB_USER: wp
             WORDPRESS_DB_PASSWORD: secret
@@ -22,13 +23,20 @@ services:
             - ./nginx/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     mysql:
         image: mysql:latest
+        restart: always
         environment: 
+            TZ: America/Sao_Paulo
             MYSQL_DATABASE: wp
             MYSQL_USER: wp
             MYSQL_PASSWORD: secret
             MYSQL_ROOT_PASSWORD: secret
+        volumes:
+            - mysql_data:/var/lib/mysql
 
     php:
         image: php:7.4-fpm-alpine
         volumes: 
             - ./src:/var/www/html:delegated
+
+volumes:
+  mysql_data:
